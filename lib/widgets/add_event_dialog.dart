@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import '../models/event.dart';
-import '../models/label.dart';
 
 class AddEventDialog extends StatefulWidget {
   final Function(Event) onAdd;
@@ -13,7 +12,6 @@ class AddEventDialog extends StatefulWidget {
 
 class _AddEventDialogState extends State<AddEventDialog> {
   late TextEditingController _controller;
-  Label? selectedLabel;
 
   @override
   void initState() {
@@ -48,7 +46,6 @@ class _AddEventDialogState extends State<AddEventDialog> {
               widget.onAdd(Event(
                 title: _controller.text,
                 date: DateTime.now(),
-                label: selectedLabel,
               ));
               Navigator.of(context).pop();
             }

@@ -44,12 +44,6 @@ class EventList extends StatelessWidget {
                   child: IntrinsicHeight(
                     child: Row(
                       children: [
-                        // Label color strip
-                        if (event.label != null)
-                          Container(
-                            width: 4,
-                            color: event.label!.color,
-                          ),
                         // Date
                         Container(
                           width: 60,

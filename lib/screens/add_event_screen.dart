@@ -1,6 +1,4 @@
 import 'package:flutter/material.dart';
-import '../models/label.dart';
-import '../widgets/add_label_dialog.dart';
 import '../models/event.dart';
 
 class AddEventScreen extends StatefulWidget {
@@ -18,48 +16,59 @@ class _AddEventScreenState extends State<AddEventScreen> {
   TimeOfDay startTime = TimeOfDay.now();
   TimeOfDay endTime = TimeOfDay.now();
   bool isAllDay = false;
-  Label? selectedLabel;
-  List<Label> labels = [];
   int currentMonth = DateTime.now().month;
   int currentYear = DateTime.now().year;
   bool isMultiDayMode = false;
 
-  List<String> get _weekDays => ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
+  List<String> get _weekDays =>
+      ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
   List<String> get _months => [
-    'January', 'February', 'March', 'April', 'May', 'June',
-    'July', 'August', 'September', 'October', 'November', 'December'
-  ];
+        'January',
+        'February',
+        'March',
+        'April',
+        'May',
+        'June',
+        'July',
+        'August',
+        'September',
+        'October',
+        'November',
+        'December'
+      ];
 
   List<DateTime> _getDaysInMonth(int month, int year) {
     final firstDayOfMonth = DateTime(year, month, 1);
     final lastDayOfMonth = DateTime(year, month + 1, 0);
-    
+
     final daysInMonth = <DateTime>[];
-    
+
     // Add empty slots for days before the first day of the month
     final firstWeekday = firstDayOfMonth.weekday;
     for (var i = 0; i < (firstWeekday + 6) % 7; i++) {
-      daysInMonth.add(firstDayOfMonth.subtract(Duration(days: (firstWeekday + 6) % 7 - i)));
+      daysInMonth.add(
+          firstDayOfMonth.subtract(Duration(days: (firstWeekday + 6) % 7 - i)));
     }
-    
+
     // Add all days of the month
     for (var i = 0; i < lastDayOfMonth.day; i++) {
       daysInMonth.add(DateTime(year, month, i + 1));
     }
-    
+
     // Add empty slots for remaining days to complete the last week
     final remainingDays = (7 - daysInMonth.length % 7) % 7;
     for (var i = 1; i <= remainingDays; i++) {
       daysInMonth.add(lastDayOfMonth.add(Duration(days: i)));
     }
-    
+
     return daysInMonth;
   }
 
   bool _isDateInRange(DateTime date) {
     if (selectedStartDate == null || selectedEndDate == null) return false;
-    return (date.isAfter(selectedStartDate!.subtract(const Duration(days: 1))) &&
-            date.isBefore(selectedEndDate!.add(const Duration(days: 1))));
+    return (date
+            .isAfter(selectedStartDate!.subtract(const Duration(days: 1))) &&
+        date.isBefore(selectedEndDate!.add(const Duration(days: 1))));
   }
 
   @override
@@ -156,7 +165,8 @@ class _AddEventScreenState extends State<AddEventScreen> {
                                 child: Text(
                                   day,
                                   textAlign: TextAlign.center,
-                                  style: const TextStyle(fontWeight: FontWeight.bold),
+                                  style: const TextStyle(
+                                      fontWeight: FontWeight.bold),
                                 ),
                               ))
                           .toList(),
@@ -166,7 +176,8 @@ class _AddEventScreenState extends State<AddEventScreen> {
                     GridView.builder(
                       shrinkWrap: true,
                       physics: const NeverScrollableScrollPhysics(),
-                      gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                      gridDelegate:
+                          const SliverGridDelegateWithFixedCrossAxisCount(
                         crossAxisCount: 7,
                         childAspectRatio: 1,
                       ),
@@ -206,8 +217,8 @@ class _AddEventScreenState extends State<AddEventScreen> {
                                   ? Colors.orange
                                   : null,
                               border: Border.all(
-                                color: isSelected || _isDateInRange(date) 
-                                    ? Colors.orange 
+                                color: isSelected || _isDateInRange(date)
+                                    ? Colors.orange
                                     : Colors.transparent,
                               ),
                               shape: BoxShape.circle,
@@ -247,12 +258,16 @@ class _AddEventScreenState extends State<AddEventScreen> {
               icon: const Icon(Icons.date_range),
               label: const Text('Multiple Days'),
               style: ElevatedButton.styleFrom(
-                backgroundColor: isMultiDayMode ? Colors.orange : Colors.orange.shade100,
+                backgroundColor:
+                    isMultiDayMode ? Colors.orange : Colors.orange.shade100,
                 foregroundColor: isMultiDayMode ? Colors.white : Colors.orange,
               ),
             ),
             const SizedBox(height: 16),
-            if (isMultiDayMode && selectedStartDate != null && selectedEndDate != null && selectedStartDate != selectedEndDate)
+            if (isMultiDayMode &&
+                selectedStartDate != null &&
+                selectedEndDate != null &&
+                selectedStartDate != selectedEndDate)
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 16.0),
                 child: Text(
@@ -309,25 +324,6 @@ class _AddEventScreenState extends State<AddEventScreen> {
               ),
             ],
             const SizedBox(height: 16),
-            const Text('Labels', style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
-            Wrap(
-              spacing: 8,
-              children: [
-                ...labels.map((label) => ChoiceChip(
-                      label: Text(label.name),
-                      selected: selectedLabel == label,
-                      backgroundColor: label.color.withOpacity(0.2),
-                      onSelected: (selected) {
-                        setState(() => selectedLabel = selected ? label : null);
-                      },
-                    )),
-                ActionChip(
-                  label: const Text('+ Add Label'),
-                  onPressed: _showAddLabelDialog,
-                ),
-              ],
-            ),
-            const SizedBox(height: 16),
             TextField(
               controller: _commentController,
               maxLines: 3,
@@ -358,24 +354,13 @@ class _AddEventScreenState extends State<AddEventScreen> {
     }
   }
 
-  void _showAddLabelDialog() {
-    showDialog(
-      context: context,
-      builder: (context) => AddLabelDialog(
-        onAdd: (label) {
-          setState(() => labels.add(label));
-        },
-      ),
-    );
-  }
-
   void _saveEvent() {
     if (_titleController.text.isNotEmpty && selectedStartDate != null) {
       final event = Event(
         title: _titleController.text,
         date: selectedStartDate!,
-        label: selectedLabel,
-        comments: _commentController.text.isNotEmpty ? _commentController.text : null,
+        comments:
+            _commentController.text.isNotEmpty ? _commentController.text : null,
         isAllDay: isAllDay,
         startTime: isAllDay ? null : startTime,
         endTime: isAllDay ? null : endTime,
