@@ -26,16 +26,6 @@ class EventDetailsDialog extends StatelessWidget {
           children: [
             Row(
               children: [
-                if (event.label != null)
-                  Container(
-                    width: 12,
-                    height: 12,
-                    decoration: BoxDecoration(
-                      color: event.label!.color,
-                      shape: BoxShape.circle,
-                    ),
-                    margin: const EdgeInsets.only(right: 8),
-                  ),
                 Expanded(
                   child: Text(
                     event.title,
@@ -52,39 +42,13 @@ class EventDetailsDialog extends StatelessWidget {
               'Date: ${DateFormat('MMMM d, yyyy').format(event.date)}',
               style: const TextStyle(fontSize: 16),
             ),
-            if (!event.isAllDay && event.startTime != null && event.endTime != null) ...[
+            if (!event.isAllDay &&
+                event.startTime != null &&
+                event.endTime != null) ...[
               const SizedBox(height: 8),
               Text(
                 'Time: ${event.startTime!.format(context)} - ${event.endTime!.format(context)}',
                 style: const TextStyle(fontSize: 16),
-              ),
-            ],
-            if (event.label != null) ...[
-              const SizedBox(height: 16),
-              Row(
-                children: [
-                  const Text(
-                    'Label: ',
-                    style: TextStyle(
-                      fontSize: 16,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                  Container(
-                    padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-                    decoration: BoxDecoration(
-                      color: event.label!.color.withOpacity(0.2),
-                      borderRadius: BorderRadius.circular(12),
-                    ),
-                    child: Text(
-                      event.label!.name,
-                      style:const TextStyle(
-                        color: Colors.white,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                  ),
-                ],
               ),
             ],
             if (event.comments != null && event.comments!.isNotEmpty) ...[
@@ -119,7 +83,8 @@ class EventDetailsDialog extends StatelessWidget {
                     Navigator.pop(context);
                     onDelete();
                   },
-                  child: const Text('Delete', style: TextStyle(color: Colors.red)),
+                  child:
+                      const Text('Delete', style: TextStyle(color: Colors.red)),
                 ),
                 const SizedBox(width: 8),
                 ElevatedButton(

@@ -34,9 +34,9 @@ class _HomeScreenState extends State<HomeScreen> {
         child: AppBar(
           backgroundColor: Colors.orange.shade200,
           centerTitle: false,
-          title:const Padding(
-            padding:  EdgeInsets.only(top: 20.0, left: 10.0),
-            child:  Text(
+          title: const Padding(
+            padding: EdgeInsets.only(top: 20.0, left: 10.0),
+            child: Text(
               'Calendar',
               style: TextStyle(
                 color: Colors.white,
@@ -57,7 +57,8 @@ class _HomeScreenState extends State<HomeScreen> {
                 onPressed: () async {
                   final event = await Navigator.push(
                     context,
-                    MaterialPageRoute(builder: (context) => const AddEventScreen()),
+                    MaterialPageRoute(
+                        builder: (context) => const AddEventScreen()),
                   );
                   if (event != null) {
                     setState(() => events.add(event));
@@ -103,7 +104,8 @@ class _HomeScreenState extends State<HomeScreen> {
     );
   }
 
-  Widget _buildFilterButton(String text, bool isActive, VoidCallback onPressed) {
+  Widget _buildFilterButton(
+      String text, bool isActive, VoidCallback onPressed) {
     return ElevatedButton(
       style: ElevatedButton.styleFrom(
         backgroundColor: isActive ? Colors.orange : Colors.orange.shade200,
